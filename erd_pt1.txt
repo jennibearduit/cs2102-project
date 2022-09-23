@@ -1,0 +1,101 @@
+[Shops](id*, name);
+[[Products]](id*, name, description, price, quantity);
+<<Sells>>();
+Shops === Sells;
+Products ==> Sells;
+
+[Manufacturers](id*, name, country);
+<Makes>();
+Products ==> Makes;
+Manufacturers --- Makes;
+[Categories](id*, name);
+<BelongsTo>();
+Products ==> BelongsTo;
+Categories --- BelongsTo;
+<CategoryRelationship>();
+Categories --> CategoryRelationship [child];
+Categories --- CategoryRelationship [parent];
+
+[Employees](id*, name, salary);
+[Users](id*, name, address, isDeleted);
+
+[Orders](id*, totalCost, address);
+<Places>();
+Users --- Places;
+Orders ==> Places;
+
+[[OrderItems]](id*, quantity, estDeliveryDate, shippingCost, status);
+<<Contains>>();
+Orders === Contains;
+OrderItems ==> Contains;
+<DetailsFor>();
+Products --- DetailsFor;
+OrderItems ==> DetailsFor;
+
+<RequestedFor>();
+[Refunds](id*, quantity, dateOfRequest, status, dateOfOutcome, rejectionReason);
+OrderItems --- RequestedFor;
+Refunds ==> RequestedFor;
+
+<RefundHandlers>();
+Employees --- RefundHandlers;
+Refunds ==> RefundHandlers;
+
+<Ratings>(isDeleted);
+OrderItems --> Ratings;
+[RatingVersions](id*, rating, timestamp);
+RatingVersions ==> Ratings;
+
+[Comments](id*, deleted);
+<MakesComment>();
+Users --- MakesComment;
+Comments ==> MakesComment;
+
+[ProductComments]();
+[Replies]();
+Comments ==> {ProductComments, Replies};
+
+<RefersTo>();
+OrderItems --> RefersTo;
+ProductComments ==> RefersTo;
+
+[[CommentVersions]](comment, timestamp*);
+<<CommentHistory>>();
+Comments === CommentHistory;
+CommentVersions ==> CommentHistory;
+
+<RepliesTo>();
+Comments --- RepliesTo [parent];
+Replies ==> RepliesTo [child];
+
+[Coupons](id*, startDate, expiryDate, value, minSpend);
+<Owns>();
+Users --- Owns;
+Coupons --- Owns;
+<Applies>();
+Coupons --- Applies;
+Orders --> Applies;
+
+[Complaints](id*, text, status);
+[ShopComplaints]();
+[OrderComplaints]();
+[CommentComplaints]();
+Complaints ==> {ShopComplaints, OrderComplaints, CommentComplaints};
+
+<AssocShops>();
+Shops --- AssocShops;
+ShopComplaints ==> AssocShops;
+<AssocOrders>();
+OrderItems --- AssocOrders;
+OrderComplaints ==> AssocOrders;
+<AssocComments>();
+Comments --- AssocComments;
+CommentComplaints ==> AssocComments;
+
+<ComplaintHandlers>();
+Employees --- ComplaintHandlers;
+Complaints --> ComplaintHandlers;
+<Files>();
+Users --- Files;
+Complaints ==> Files;
+
